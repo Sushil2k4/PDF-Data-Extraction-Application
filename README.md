@@ -31,6 +31,6 @@ docs/testing.md for testing information
 
 ## Contributors:
 
-[Sushil Kumar Mishra] (Team Lead)
-[Sushil Kumar Mishra] (Developer)
+[Sushil Kumar Mishra] (Team Lead) <br/>
+[Sushil Kumar Mishra] (Developer) <br/>
 [Divyansh Kumar Singh] (Developer)
