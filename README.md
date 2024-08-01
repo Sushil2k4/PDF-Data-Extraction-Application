@@ -49,9 +49,9 @@ docs/implementation_details.md for implementation details and architecture diagr
 docs/testing.md for testing information 📝
 
 ## Contributors 👥
-[Sushil Kumar Mishra] (Team Lead) 👨‍💻
-[Sushil Kumar Mishra] (Developer) 👨‍💻
-[Divyansh Kumar Singh] (Developer) 👨‍💻
+[Sushil Kumar Mishra] (Team Lead) 👨‍💻 <br/>
+[Sushil Kumar Mishra] (Developer) 👨‍💻 <br/>
+[Divyansh Kumar Singh] (Developer) 👨‍💻 
 
 ## Machine Learning 🤖
 The app uses pre-trained models or custom models to recognize and interpret marks on forms. We use libraries like TensorFlow or PyTorch to implement these models. For example, we can use a convolutional neural network (CNN) to classify images of tick marks, cross marks, and shaded boxes 📸.
