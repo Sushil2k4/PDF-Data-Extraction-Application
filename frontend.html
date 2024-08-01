@@ -118,14 +118,14 @@
 </head>
 <body>
     <div class="container">
-        <h1>PDF Data Extraction</h1>
-        <p class="description">Upload your PDF form to extract data and convert it to Excel or CSV format.</p>
-        <label for="pdf-upload" class="file-label">Choose PDF File</label>
+        <h1>📄 PDF Data Extraction</h1>
+        <p class="description">Upload your PDF form to extract data and convert it to Excel or CSV format. 🚀</p>
+        <label for="pdf-upload" class="file-label">📂 Choose PDF File</label>
         <input type="file" id="pdf-upload" accept=".pdf">
-        <button class="upload-btn" onclick="uploadFile()">Upload and Extract</button>
+        <button class="upload-btn" onclick="uploadFile()">🔄 Upload and Extract</button>
         <div id="result">
             <p id="status"></p>
-            <a id="download-link" class="download-link" href="#" style="display:none;">Download Excel File</a>
+            <a id="download-link" class="download-link" href="#" style="display:none;">📥 Download Excel File</a>
         </div>
         <footer>
             Made with ❤️ by <a href="#" target="_blank">Algorithmic Avengers</a>
@@ -145,12 +145,12 @@
 
                 // Simulate file upload and extraction
                 setTimeout(() => {
-                    status.textContent = 'File uploaded and processed successfully!';
+                    status.textContent = '📤 File uploaded and processed successfully!';
                     downloadLink.href = 'path/to/generated/excel.xlsx'; // Update this with the correct path
                     downloadLink.style.display = 'block';
                 }, 1000);
             } else {
-                status.textContent = 'Please choose a PDF file first.';
+                status.textContent = '❗ Please choose a PDF file first.';
             }
         }
     </script>
