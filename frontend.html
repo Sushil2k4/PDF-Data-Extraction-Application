@@ -15,6 +15,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            flex-direction: column;
         }
 
         .container {
@@ -22,8 +23,9 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            max-width: 600px;
+            max-width: 500px; /* Adjusted max-width */
             width: 100%;
+            box-sizing: border-box; /* Includes padding in width */
         }
 
         h1 {
@@ -44,8 +46,9 @@
         }
 
         .file-label {
-            display: inline-block;
-            padding: 10px 20px;
+            display: block;
+            width: 100%;
+            padding: 10px;
             font-size: 16px;
             color: #fff;
             background-color: #4CAF50;
@@ -53,8 +56,10 @@
             cursor: pointer;
             text-align: center;
             margin-bottom: 10px;
-            width: 100%;
-            text-decoration: none;
+            box-sizing: border-box; /* Includes padding in width */
+            overflow: hidden; /* Ensures text does not overflow */
+            text-overflow: ellipsis; /* Adds ellipsis if text overflows */
+            white-space: nowrap; /* Prevents text from wrapping */
         }
 
         .upload-btn {
@@ -92,53 +97,62 @@
         .download-link:hover {
             text-decoration: underline;
         }
+
+        footer {
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        footer a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>PDF Data Extraction</h1>
-        <p class="description">Upload your customer-filled PDF forms to extract and convert data into Excel or CSV format.</p>
-        <form id="uploadForm">
-            <label for="pdfFile" class="file-label">Choose PDF File</label>
-            <input type="file" id="pdfFile" accept=".pdf" required>
-            <button type="submit" class="upload-btn">Upload PDF</button>
-        </form>
+        <p class="description">Upload your PDF form to extract data and convert it to Excel or CSV format.</p>
+        <label for="pdf-upload" class="file-label">Choose PDF File</label>
+        <input type="file" id="pdf-upload" accept=".pdf">
+        <button class="upload-btn" onclick="uploadFile()">Upload and Extract</button>
         <div id="result">
             <p id="status"></p>
+            <a id="download-link" class="download-link" href="#" style="display:none;">Download Excel File</a>
         </div>
+        <footer>
+            Made with ❤️ by <a href="#" target="_blank">Algorithmic Avengers</a>
+        </footer>
     </div>
+
     <script>
-        document.getElementById('uploadForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            const fileInput = document.getElementById('pdfFile');
+        function uploadFile() {
+            const fileInput = document.getElementById('pdf-upload');
             const file = fileInput.files[0];
-            
-            if (!file) {
-                document.getElementById('status').innerText = 'Please select a PDF file.';
-                return;
+            const status = document.getElementById('status');
+            const downloadLink = document.getElementById('download-link');
+
+            if (file) {
+                const formData = new FormData();
+                formData.append('pdf', file);
+
+                // Simulate file upload and extraction
+                setTimeout(() => {
+                    status.textContent = 'File uploaded and processed successfully!';
+                    downloadLink.href = 'path/to/generated/excel.xlsx'; // Update this with the correct path
+                    downloadLink.style.display = 'block';
+                }, 1000);
+            } else {
+                status.textContent = 'Please choose a PDF file first.';
             }
-            
-            const formData = new FormData();
-            formData.append('pdf', file);
-            
-            fetch('/upload', { // Replace with your actual backend URL
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('status').innerHTML = `<a href="${data.fileUrl}" download class="download-link">Download Processed File</a>`;
-                } else {
-                    document.getElementById('status').innerText = 'An error occurred. Please try again.';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('status').innerText = 'An error occurred. Please try again.';
-            });
-        });
+        }
     </script>
 </body>
 </html>
