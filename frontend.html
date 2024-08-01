@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Data Extraction</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #4CAF50;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 10px;
+            width: 100%;
+            text-decoration: none;
+        }
+
+        .upload-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .upload-btn:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #status {
+            font-size: 16px;
+            color: #4CAF50;
+        }
+
+        .download-link {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .download-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PDF Data Extraction</h1>
+        <p class="description">Upload your customer-filled PDF forms to extract and convert data into Excel or CSV format.</p>
+        <form id="uploadForm">
+            <label for="pdfFile" class="file-label">Choose PDF File</label>
+            <input type="file" id="pdfFile" accept=".pdf" required>
+            <button type="submit" class="upload-btn">Upload PDF</button>
+        </form>
+        <div id="result">
+            <p id="status"></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const fileInput = document.getElementById('pdfFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                document.getElementById('status').innerText = 'Please select a PDF file.';
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('pdf', file);
+            
+            fetch('/upload', { // Replace with your actual backend URL
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('status').innerHTML = `<a href="${data.fileUrl}" download class="download-link">Download Processed File</a>`;
+                } else {
+                    document.getElementById('status').innerText = 'An error occurred. Please try again.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('status').innerText = 'An error occurred. Please try again.';
+            });
+        });
+    </script>
+</body>
+</html>
