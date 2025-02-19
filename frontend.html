@@ -17,34 +17,28 @@
             height: 100vh;
             flex-direction: column;
         }
-
         .container {
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            max-width: 500px; /* Adjusted max-width */
+            max-width: 500px;
             width: 100%;
-            box-sizing: border-box; /* Includes padding in width */
+            box-sizing: border-box;
+            text-align: center;
         }
-
         h1 {
             color: #4CAF50;
-            text-align: center;
             margin-bottom: 10px;
         }
-
         .description {
-            text-align: center;
-            margin-bottom: 20px;
             font-size: 16px;
             color: #666;
+            margin-bottom: 20px;
         }
-
         input[type="file"] {
             display: none;
         }
-
         .file-label {
             display: block;
             width: 100%;
@@ -54,14 +48,14 @@
             background-color: #4CAF50;
             border-radius: 4px;
             cursor: pointer;
-            text-align: center;
             margin-bottom: 10px;
-            box-sizing: border-box; /* Includes padding in width */
-            overflow: hidden; /* Ensures text does not overflow */
-            text-overflow: ellipsis; /* Adds ellipsis if text overflows */
-            white-space: nowrap; /* Prevents text from wrapping */
         }
-
+        .file-name {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+            display: none;
+        }
         .upload-btn {
             display: block;
             width: 100%;
@@ -72,45 +66,39 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            transition: background 0.3s;
         }
-
         .upload-btn:hover {
             background-color: #45a049;
         }
-
         #result {
             margin-top: 20px;
             text-align: center;
         }
-
         #status {
             font-size: 16px;
             color: #4CAF50;
         }
-
         .download-link {
             color: #4CAF50;
             text-decoration: none;
             font-weight: bold;
+            display: none;
         }
-
         .download-link:hover {
             text-decoration: underline;
         }
-
         footer {
             text-align: center;
             color: #888;
             font-size: 14px;
             margin-top: 20px;
         }
-
         footer a {
             color: #4CAF50;
             text-decoration: none;
             font-weight: bold;
         }
-
         footer a:hover {
             text-decoration: underline;
         }
@@ -119,13 +107,14 @@
 <body>
     <div class="container">
         <h1>📄 PDF Data Extraction</h1>
-        <p class="description">Upload your PDF form to extract data and convert it to Excel or CSV format. 🚀</p>
+        <p class="description">Upload your PDF to extract data and convert it to Excel or CSV format. 🚀</p>
         <label for="pdf-upload" class="file-label">📂 Choose PDF File</label>
-        <input type="file" id="pdf-upload" accept=".pdf">
+        <input type="file" id="pdf-upload" accept=".pdf" onchange="displayFileName()">
+        <p class="file-name" id="file-name"></p>
         <button class="upload-btn" onclick="uploadFile()">🔄 Upload and Extract</button>
         <div id="result">
             <p id="status"></p>
-            <a id="download-link" class="download-link" href="#" style="display:none;">📥 Download Excel File</a>
+            <a id="download-link" class="download-link" href="#">📥 Download Excel File</a>
         </div>
         <footer>
             Made with ❤️ by <a href="#" target="_blank">Algorithmic Avengers</a>
@@ -133,25 +122,35 @@
     </div>
 
     <script>
+        function displayFileName() {
+            const fileInput = document.getElementById('pdf-upload');
+            const fileNameDisplay = document.getElementById('file-name');
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = `📄 ${fileInput.files[0].name}`;
+                fileNameDisplay.style.display = 'block';
+            } else {
+                fileNameDisplay.style.display = 'none';
+            }
+        }
+
         function uploadFile() {
             const fileInput = document.getElementById('pdf-upload');
             const file = fileInput.files[0];
             const status = document.getElementById('status');
             const downloadLink = document.getElementById('download-link');
 
-            if (file) {
-                const formData = new FormData();
-                formData.append('pdf', file);
-
-                // Simulate file upload and extraction
-                setTimeout(() => {
-                    status.textContent = '📤 File uploaded and processed successfully!';
-                    downloadLink.href = 'path/to/generated/excel.xlsx'; // Update this with the correct path
-                    downloadLink.style.display = 'block';
-                }, 1000);
-            } else {
+            if (!file) {
                 status.textContent = '❗ Please choose a PDF file first.';
+                return;
             }
+            
+            status.textContent = '⏳ Processing... Please wait.';
+
+            setTimeout(() => {
+                status.textContent = '✅ File uploaded and processed successfully!';
+                downloadLink.href = 'path/to/generated/excel.xlsx'; // Update with the correct path
+                downloadLink.style.display = 'block';
+            }, 1500);
         }
     </script>
 </body>
