@@ -13,19 +13,19 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Ensure Tesseract-OCR is installed and update the path if necessary
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-def extract_text_from_image(image):
+def extract_text_from_image(image: Image.Image) -> str:
     """
     Extract text from an image using Optical Character Recognition (OCR).
     """
     try:
         image = image.convert('L')  # Convert image to grayscale for better OCR accuracy
-        text = pytesseract.image_to_string(image)
+        text = pytesseract.image_to_string(image, lang='eng')
         return text.strip()
     except Exception as e:
         logging.error(f"Error extracting text from image: {e}")
         return ""
 
-def extract_text_from_pdf(pdf_path):
+def extract_text_from_pdf(pdf_path: str) -> list:
     """
     Extract text and images from a PDF file.
     """
@@ -37,11 +37,11 @@ def extract_text_from_pdf(pdf_path):
         pdf_document = fitz.open(pdf_path)
         all_text = []
 
-        for page_num in range(len(pdf_document)):
-            page = pdf_document.load_page(page_num)
+        for page_num, page in enumerate(pdf_document):
             text = page.get_text("text")
-            all_text.append(f"Page {page_num + 1} Text:\n{text}\n")
-
+            if text.strip():
+                all_text.append(f"Page {page_num + 1} Text:\n{text}\n")
+            
             for img_index, img in enumerate(page.get_images(full=True)):
                 xref = img[0]
                 base_image = pdf_document.extract_image(xref)
@@ -49,7 +49,8 @@ def extract_text_from_pdf(pdf_path):
                 image = Image.open(BytesIO(image_bytes))
                 
                 img_text = extract_text_from_image(image)
-                all_text.append(f"Image {img_index + 1} Text:\n{img_text}\n")
+                if img_text.strip():
+                    all_text.append(f"Image {img_index + 1} Text:\n{img_text}\n")
         
         logging.info("Text extraction completed successfully.")
         return all_text
@@ -57,13 +58,13 @@ def extract_text_from_pdf(pdf_path):
         logging.error(f"Error processing PDF: {e}")
         return []
 
-def convert_to_excel(data, output_path):
+def convert_to_excel(data: list, output_path: str) -> None:
     """
     Convert extracted data into an Excel file.
     """
     try:
-        df = pd.DataFrame(data, columns=["Extracted Text"])
-        df.to_excel(output_path, index=False)
+        df = pd.DataFrame({"Extracted Text": data})
+        df.to_excel(output_path, index=False, engine='openpyxl')
         logging.info(f"Data successfully saved to {output_path}")
     except Exception as e:
         logging.error(f"Error saving to Excel: {e}")
