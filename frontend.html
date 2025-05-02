@@ -1,157 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Data Extraction</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-        }
-        .container {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            max-width: 500px;
-            width: 100%;
-            box-sizing: border-box;
-            text-align: center;
-        }
-        h1 {
-            color: #4CAF50;
-            margin-bottom: 10px;
-        }
-        .description {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 20px;
-        }
-        input[type="file"] {
-            display: none;
-        }
-        .file-label {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #4CAF50;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-        .file-name {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 10px;
-            display: none;
-        }
-        .upload-btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .upload-btn:hover {
-            background-color: #45a049;
-        }
-        #result {
-            margin-top: 20px;
-            text-align: center;
-        }
-        #status {
-            font-size: 16px;
-            color: #4CAF50;
-        }
-        .download-link {
-            color: #4CAF50;
-            text-decoration: none;
-            font-weight: bold;
-            display: none;
-        }
-        .download-link:hover {
-            text-decoration: underline;
-        }
-        footer {
-            text-align: center;
-            color: #888;
-            font-size: 14px;
-            margin-top: 20px;
-        }
-        footer a {
-            color: #4CAF50;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        footer a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PDF Data Extraction</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    .container {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      max-width: 520px;
+      width: 90%;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+    .container:hover {
+      transform: translateY(-2px);
+    }
+    h1 {
+      color: #4CAF50;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .description {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    .file-label {
+      display: inline-block;
+      padding: 12px 20px;
+      background-color: #4CAF50;
+      color: #fff;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-bottom: 12px;
+    }
+    .file-label:hover {
+      background-color: #45a049;
+    }
+    .file-name {
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 12px;
+    }
+    input[type="file"] {
+      display: none;
+    }
+    .upload-btn {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .upload-btn:hover {
+      background-color: #45a049;
+    }
+    #result {
+      margin-top: 20px;
+    }
+    #status {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    .download-link {
+      display: none;
+      color: #4CAF50;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .download-link:hover {
+      text-decoration: underline;
+    }
+    .drag-area {
+      border: 2px dashed #ccc;
+      border-radius: 6px;
+      padding: 20px;
+      margin-bottom: 15px;
+      transition: background 0.3s ease;
+      color: #888;
+    }
+    .drag-area.dragover {
+      background-color: #e8f5e9;
+      border-color: #4CAF50;
+      color: #4CAF50;
+    }
+    footer {
+      text-align: center;
+      color: #888;
+      font-size: 14px;
+      margin-top: 30px;
+    }
+    footer a {
+      color: #4CAF50;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📄 PDF Data Extraction</h1>
-        <p class="description">Upload your PDF to extract data and convert it to Excel or CSV format. 🚀</p>
-        <label for="pdf-upload" class="file-label">📂 Choose PDF File</label>
-        <input type="file" id="pdf-upload" accept=".pdf" onchange="displayFileName()">
-        <p class="file-name" id="file-name"></p>
-        <button class="upload-btn" onclick="uploadFile()">🔄 Upload and Extract</button>
-        <div id="result">
-            <p id="status"></p>
-            <a id="download-link" class="download-link" href="#">📥 Download Excel File</a>
-        </div>
-        <footer>
-            Made with ❤️ by <a href="#" target="_blank">Algorithmic Avengers</a>
-        </footer>
+  <div class="container">
+    <h1>📄 PDF Data Extraction</h1>
+    <p class="description">Upload or drag your PDF to convert and extract its data as Excel or CSV. 🚀</p>
+
+    <div class="drag-area" id="drag-area">
+      Drag & Drop PDF here or <label for="pdf-upload" class="file-label">Browse File</label>
     </div>
 
-    <script>
-        function displayFileName() {
-            const fileInput = document.getElementById('pdf-upload');
-            const fileNameDisplay = document.getElementById('file-name');
-            if (fileInput.files.length > 0) {
-                fileNameDisplay.textContent = `📄 ${fileInput.files[0].name}`;
-                fileNameDisplay.style.display = 'block';
-            } else {
-                fileNameDisplay.style.display = 'none';
-            }
-        }
+    <input type="file" id="pdf-upload" accept=".pdf" onchange="handleFile(this.files[0])">
+    <p class="file-name" id="file-name">No file selected</p>
 
-        function uploadFile() {
-            const fileInput = document.getElementById('pdf-upload');
-            const file = fileInput.files[0];
-            const status = document.getElementById('status');
-            const downloadLink = document.getElementById('download-link');
+    <button class="upload-btn" onclick="uploadFile()">🔄 Upload and Extract</button>
 
-            if (!file) {
-                status.textContent = '❗ Please choose a PDF file first.';
-                return;
-            }
-            
-            status.textContent = '⏳ Processing... Please wait.';
+    <div id="result">
+      <p id="status"></p>
+      <a id="download-link" class="download-link" href="#">📥 Download Excel File</a>
+    </div>
 
-            setTimeout(() => {
-                status.textContent = '✅ File uploaded and processed successfully!';
-                downloadLink.href = 'path/to/generated/excel.xlsx'; // Update with the correct path
-                downloadLink.style.display = 'block';
-            }, 1500);
-        }
-    </script>
+    <footer>
+      Made with ❤️ by <a href="#" target="_blank">Algorithmic Avengers</a>
+    </footer>
+  </div>
+
+  <script>
+    const dragArea = document.getElementById('drag-area');
+    const fileNameDisplay = document.getElementById('file-name');
+    let selectedFile = null;
+
+    dragArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dragArea.classList.add('dragover');
+    });
+
+    dragArea.addEventListener('dragleave', () => {
+      dragArea.classList.remove('dragover');
+    });
+
+    dragArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dragArea.classList.remove('dragover');
+      handleFile(e.dataTransfer.files[0]);
+    });
+
+    function handleFile(file) {
+      if (file && file.type === 'application/pdf') {
+        selectedFile = file;
+        fileNameDisplay.textContent = `📄 ${file.name}`;
+        fileNameDisplay.style.display = 'block';
+      } else {
+        fileNameDisplay.textContent = '❌ Please upload a valid PDF file.';
+        selectedFile = null;
+      }
+    }
+
+    function uploadFile() {
+      const status = document.getElementById('status');
+      const downloadLink = document.getElementById('download-link');
+
+      if (!selectedFile) {
+        status.style.color = 'red';
+        status.textContent = '❗ Please choose a PDF file first.';
+        return;
+      }
+
+      status.style.color = '#4CAF50';
+      status.textContent = '⏳ Uploading and processing...';
+
+      // Simulate async processing with timeout
+      setTimeout(() => {
+        status.textContent = '✅ File processed successfully!';
+        downloadLink.href = 'path/to/generated/excel.xlsx'; // Replace this with dynamic URL
+        downloadLink.style.display = 'inline-block';
+      }, 1500);
+
+      // To integrate with backend:
+      /*
+      const formData = new FormData();
+      formData.append("pdf", selectedFile);
+
+      fetch("/api/upload", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        status.textContent = "✅ File processed successfully!";
+        downloadLink.href = data.downloadUrl;
+        downloadLink.style.display = 'inline-block';
+      })
+      .catch(() => {
+        status.style.color = "red";
+        status.textContent = "❌ Something went wrong. Please try again.";
+      });
+      */
+    }
+  </script>
 </body>
 </html>
